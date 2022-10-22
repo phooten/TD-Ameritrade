@@ -45,15 +45,12 @@ def main():
 
 
     # Opens CSV file ( pandas )
-    csv_reader = pandas.read_csv( csv_input_path )
-    dates = csv_reader[ col_date ]
-    print( dates )
+    csv_reader = pandas.read_csv( csv_input_path, sep = ',', index_col = 0 )
+    len_row, len_col = csv_reader.shape
+    print( len_row )
+    print( len_col )
 
-    # Opens CSV file
-    # with open( csv_input_path, 'r' ) as in_file,  open( csv_output_path, 'a' ) as out_file:
-    #     csv_reader = csv.reader( in_file )
-    #     for row in csv_reader:
-    #         
+
 
 
 
