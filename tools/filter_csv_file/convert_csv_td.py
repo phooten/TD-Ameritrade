@@ -18,7 +18,7 @@
 
 # Libraries
 import csv
-import pandas
+import pandas as pd
 
 
 
@@ -56,17 +56,24 @@ def main():
     # Columns
     col_date = "DATE"
     col_qauntity = "QUANTITY"
-    col_symb = "SYMBOL"
+    col_tick = "SYMBOL"
     col_price = "PRICE"
 
 
     # Characteristics of CSV 
-    csv_obj = pandas.read_csv( csv_input_path, sep = ',', index_col = 0 )
-    print( csv_obj.columns )
-    print( csv_obj.shape )
-    print( csv_obj.dtypes )
+    csv_obj = pd.read_csv( csv_input_path, sep = ',', index_col = 0 )
+    len_row, len_col = csv_obj.shape
+    # print( csv_obj.columns )
+    # print( csv_obj.shape )
+    # print( csv_obj.dtypes )
+    top = csv_obj.head( 0 )
+    print( top )
+    # for row in csv_obj:
+    #     print( row )
     
-    # len_row, len_col = csv_obj.shape
+    # for col in range( len_col ):
+    #     print( csv_obj.column[ col ] ) 
+        
     # print( len_row )
     # print( len_col )
     # row looks to show the columns, not row
