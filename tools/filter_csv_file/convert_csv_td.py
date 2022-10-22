@@ -21,8 +21,24 @@ import csv
 import pandas
 
 
-def main():
 
+# Description:
+#       Inputs the cell to be filtered
+# return:
+#       String for -> Ticker
+def filterTicker( pCell):
+    ticker = ""
+    
+    #TODO: filter out the ticker
+
+    return ticker
+
+
+
+
+# Main:
+#   Driver of the script. 
+def main():
     # Variables
     # TODO: find the newest file by default
     # TODO: make this runable from anywhere
@@ -44,13 +60,19 @@ def main():
     col_price = "PRICE"
 
 
-    # Opens CSV file ( pandas )
-    csv_reader = pandas.read_csv( csv_input_path, sep = ',', index_col = 0 )
-    len_row, len_col = csv_reader.shape
-    print( len_row )
-    print( len_col )
-
-
+    # Characteristics of CSV 
+    csv_obj = pandas.read_csv( csv_input_path, sep = ',', index_col = 0 )
+    print( csv_obj.columns )
+    print( csv_obj.shape )
+    print( csv_obj.dtypes )
+    
+    # len_row, len_col = csv_obj.shape
+    # print( len_row )
+    # print( len_col )
+    # row looks to show the columns, not row
+    # for row in csv_reader:
+    #     text = row[ 1 ]
+    #     print( text )
 
 
 
