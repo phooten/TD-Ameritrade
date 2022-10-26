@@ -19,6 +19,7 @@
 # Libraries
 import csv
 import pandas as pd
+import os
 
 
 
@@ -35,52 +36,54 @@ def filterTicker( pCell):
 
 
 
-
 # Main:
 #   Driver of the script. 
 def main():
     # Variables
     # TODO: find the newest file by default
     # TODO: make this runable from anywhere
-    csv_input_name = "transactions.csv"
-    csv_input_path = "input-files/" + csv_input_name
-    csv_output_name = "output.csv"
-    csv_output_path = "output/" + csv_output_name
+    csv_input_name = 'transactions.csv'
+    csv_input_path = 'input-files/' + csv_input_name
+    csv_output_name = 'output.csv'
+    csv_output_path = 'output/' + csv_output_name
 
     # Key Filters:
-    filter_removal_expiration = "REMOVAL OF OPTION DUE TO EXPIRATION"
-    filter_removal_assignment = "REMOVAL OF OPTION DUE TO ASSIGNMENT"
-    filter_sold = "Sold"
-    filter_bought = "Bought"
+    filter_removal_expiration = 'REMOVAL OF OPTION DUE TO EXPIRATION'
+    filter_removal_assignment = 'REMOVAL OF OPTION DUE TO ASSIGNMENT'
+    filter_sold = 'Sold'
+    filter_bought = 'Bought'
 
     # Columns
-    col_date = "DATE"
-    col_qauntity = "QUANTITY"
-    col_tick = "SYMBOL"
-    col_price = "PRICE"
+    col_id = 'TRANSACTION ID'
+    col_desc = 'DESCRIPTION'
+    col_date = 'DATE'
+    col_qaun = 'QUANTITY'
+    col_tick = 'SYMBOL'
+    col_price = 'PRICE'
+    col_num = 'NUMBER'
 
+    # print( df.columns )
+    # print( df.shape )
+    # print( df.dtypes )
 
     # Characteristics of CSV 
-    csv_obj = pd.read_csv( csv_input_path, sep = ',', index_col = 0 )
-    len_row, len_col = csv_obj.shape
-    # print( csv_obj.columns )
-    # print( csv_obj.shape )
-    # print( csv_obj.dtypes )
-    top = csv_obj.head( 0 )
-    print( top )
-    # for row in csv_obj:
-    #     print( row )
+    df = pd.read_csv( csv_input_path, sep=',' )
+    len_row, len_col = df.shape
     
-    # for col in range( len_col ):
-    #     print( csv_obj.column[ col ] ) 
-        
-    # print( len_row )
-    # print( len_col )
-    # row looks to show the columns, not row
-    # for row in csv_reader:
-    #     text = row[ 1 ]
-    #     print( text )
+    
+    # Filters information to from descripton in every row
+    df[ col_num ] = 0
+    for row in range( len_row ):
+        print( df.loc[ row, col_desc ] )
+    
 
+    # Handle the output file
+    try:
+        os.remove( csv_output_path )
+    except:
+        print( "No files in this path: ", csv_output_path )
+    df.to_csv( csv_output_path )
+    
 
 
 if __name__ == "__main__":
