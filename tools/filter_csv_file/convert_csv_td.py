@@ -1,14 +1,11 @@
 #!/bin/
 
-
-
 # Overview:
 #   Goals of this script:
 #       - convert the .csv of option trades from TD trade history to readable format
 #       - show data in some sort of QT format. Maybe display the data and allow user customization?
 #
 #
-
 
 # Outline / Plan:
 #   - take in newest input file, OR argument file
@@ -22,32 +19,36 @@ import pandas as pd
 import os
 
 
-
-# Description:
-#       Inputs the cell to be filtered
-# return:
-#       String for -> Ticker
 def column_filter( pCell ):
+    # print( pCell )
+
+    # Variables
+    f_call = 'Call'
+    f_put = 'Put'
     f_sold = 'Sold'
     f_bought = 'Bought'
     ticker_col = [ f_sold, f_bought ]
 
-    word = f_sold 
-
+    # Filters out all buys / sells for options
     if any( x in pCell for x in ticker_col ):
-    # if f_bought in pCell: 
-        # print('success. found \'' + word + '\' in \'' + pCell + '\'' )
         row_str = pCell.split()
-        print( 'Type = ' + row_str[ 0 ] + '    ticker = ' + row_str[ 2 ] )
-
-    #TODO: filter out the ticker
-
-    # return ticker
-
+        action = row_str[ 0 ]
+        amount = row_str[ 1 ]  
+        ticker = row_str[ 2 ]
+        date = row_str[ 3 ] + ' ' + row_str[ 4 ] + ' ' + row_str[ 5 ]
+        strike = row_str[ 6 ]
+        opt_type = row_str[ 7 ]
+        # row_str[ 8 ] -> None
+        price = row_str[ 9 ]
+        
+        # s = ', '
+        # ans = action + s + amount + s + ticker + s + date + s + strike + s + opt_type + s + price 
+        # print( ans )
+    
+    # elif :
 
 
 # Main:
-#   Driver of the script. 
 def main():
     # Variables
     # TODO: find the newest file by default
@@ -78,6 +79,7 @@ def main():
     # Filters information to from descripton in every row
     df[ col_num ] = 0
     for row in range( len_row ):
+        print( row )
         column_filter( df.loc[ row, col_desc ] )
         # print( df.loc[ row, col_desc ] )
     
@@ -91,7 +93,7 @@ def main():
     
 
 
+
+
 if __name__ == "__main__":
     main()
-
-
