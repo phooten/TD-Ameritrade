@@ -27,12 +27,22 @@ import os
 #       Inputs the cell to be filtered
 # return:
 #       String for -> Ticker
-def filterTicker( pCell):
-    ticker = ""
-    
+def column_filter( pCell ):
+    f_sold = 'Sold'
+    f_bought = 'Bought'
+    ticker_col = [ f_sold, f_bought ]
+
+    word = f_sold 
+
+    if any( x in pCell for x in ticker_col ):
+    # if f_bought in pCell: 
+        # print('success. found \'' + word + '\' in \'' + pCell + '\'' )
+        row_str = pCell.split()
+        print( 'Type = ' + row_str[ 0 ] + '    ticker = ' + row_str[ 2 ] )
+
     #TODO: filter out the ticker
 
-    return ticker
+    # return ticker
 
 
 
@@ -47,20 +57,14 @@ def main():
     csv_output_name = 'output.csv'
     csv_output_path = 'output/' + csv_output_name
 
-    # Key Filters:
-    filter_removal_expiration = 'REMOVAL OF OPTION DUE TO EXPIRATION'
-    filter_removal_assignment = 'REMOVAL OF OPTION DUE TO ASSIGNMENT'
-    filter_sold = 'Sold'
-    filter_bought = 'Bought'
-
     # Columns
-    col_id = 'TRANSACTION ID'
-    col_desc = 'DESCRIPTION'
     col_date = 'DATE'
+    col_desc = 'DESCRIPTION'
+    col_id = 'TRANSACTION ID'
+    col_num = 'NUMBER'
+    col_price = 'PRICE'
     col_qaun = 'QUANTITY'
     col_tick = 'SYMBOL'
-    col_price = 'PRICE'
-    col_num = 'NUMBER'
 
     # print( df.columns )
     # print( df.shape )
@@ -74,7 +78,8 @@ def main():
     # Filters information to from descripton in every row
     df[ col_num ] = 0
     for row in range( len_row ):
-        print( df.loc[ row, col_desc ] )
+        column_filter( df.loc[ row, col_desc ] )
+        # print( df.loc[ row, col_desc ] )
     
 
     # Handle the output file
