@@ -13,13 +13,21 @@
 #   - filter through excel, and append to a new file
 #   - 
 
+# Concerns Important note:
+#   - This script is written with the assumption that only single legs are being
+#     performed. It's already getting complicated / tedious dealing with just this. 
+#     Not sure what it would look like trying to connect which options were performed
+#     together. Maybe utilizing the same date would be benefitial? but what if I 
+#     made two or more scalps on the same day with the same tickers? 
+
 # Libraries
 import csv
 import pandas as pd
 import os
 
+total_commision = 0
 
-def column_filter( pRow, pColLen, pCell):
+def column_filter( pCurrRow, pColLen, pCell, pRow ):
     # print( pCell )
 
     # Variables
@@ -42,8 +50,31 @@ def column_filter( pRow, pColLen, pCell):
     ticker_col = [ f_sold, f_bought ]
     row_str = pCell.split()
 
+    # Filters out Expiration
+    if f_expiration in pCell:
+    # elif any( x in pCell for x in f_expiration ):
+        # print("Option Expriation: " + str(pCurrRow) + " " + pCell )
+        new_row.append( pCurrRow )
+        for cur in range( pColLen - 1 ):
+            new_row.append( 'NaN')
+
+    # Filters out Assignment
+    elif f_assignment in pCell:
+    # elif any( x in pCell for x in f_expiration ):
+        # print("Option Expriation: " + str(pCurrRow) + " " + pCell )
+        new_row.append( pCurrRow )
+        for cur in range( pColLen - 1 ):
+            new_row.append( 'NaN')
+
+    # Filters out adjustments
+    elif any( x in pCell for x in ( f_balance, f_margin ) ):
+        # print("Balance: " + str(pCurrRow) + " " + pCell )
+        new_row.append( pCurrRow )
+        for cur in range( pColLen - 1 ):
+            new_row.append( 'NaN')
+
     # Filters out options
-    if any( x in pCell for x in option_col ):
+    elif any( x in pCell for x in option_col ):
         
         # Saving values
         action = row_str[ 0 ]
@@ -52,13 +83,21 @@ def column_filter( pRow, pColLen, pCell):
         date = row_str[ 3 ] + ' ' + row_str[ 4 ] + ' ' + row_str[ 5 ]
         strike = row_str[ 6 ]
         opt_type = row_str[ 7 ]
-        # row_str[ 8 ] -> None
+        # row_str[ 8 ] is not important
         price = row_str[ 9 ]
-        # total = 0
+        commision = pRow[ 6 ]
+
+        # print( commision )
+        if commision >= 0:
+            global total_commision 
+            # print( str( total_commision ) + " at row: " + str( pCurrRow) )
+            total_commision += commision
+        else:
+            print( "type: " + str(type(commision)) + " value: " + str( commision) + " row: " + str(pCurrRow) )
         
         # Creating a new row
         
-        new_row.append( pRow )
+        new_row.append( pCurrRow )
         new_row.append( "DATE" )
         new_row.append( date )
         new_row.append( opt_type )
@@ -69,46 +108,23 @@ def column_filter( pRow, pColLen, pCell):
         new_row.append( price )
         # new_row.append( total )
 
-    # Filters out Expiration
-    elif f_expiration in pCell:
-    # elif any( x in pCell for x in f_expiration ):
-        # print("Option Expriation: " + str(pRow) + " " + pCell )
-        new_row.append( pRow )
-        for cur in range( pColLen - 1 ):
-            new_row.append( 'NaN')
-
-    # Filters out Assignment
-    elif f_assignment in pCell:
-    # elif any( x in pCell for x in f_expiration ):
-        # print("Option Expriation: " + str(pRow) + " " + pCell )
-        new_row.append( pRow )
-        for cur in range( pColLen - 1 ):
-            new_row.append( 'NaN')
-
-    # Filters out adjustments
-    elif any( x in pCell for x in ( f_balance, f_margin ) ):
-        # print("Balance: " + str(pRow) + " " + pCell )
-        new_row.append( pRow )
-        for cur in range( pColLen - 1 ):
-            new_row.append( 'NaN')
-
     # Filters out Assignment
     elif f_exchange in pCell:
     # elif any( x in pCell for x in f_expiration ):
-        # print("Option Expriation: " + str(pRow) + " " + pCell )
-        new_row.append( pRow )
+        # print("Option Expriation: " + str(pCurrRow) + " " + pCell )
+        new_row.append( pCurrRow )
         for cur in range( pColLen - 1 ):
             new_row.append( 'NaN')
 
 
     elif any( x in row_str[ 0 ] for x in stock_col ):
-        new_row.append( pRow )
+        new_row.append( pCurrRow )
         for cur in range( pColLen - 1 ):
             new_row.append( 'NaN')
 
     # Filters out funding receipts 
     elif f_funding in pCell:
-        print( "funding: " + str(pRow) )
+        # print( "funding: " + str(pCurrRow) )
         new_row = []
     
     else:
@@ -163,7 +179,7 @@ def main():
     for row in range( len_row ):
         # print( row )
         if row != len_row - 1:
-            new_row = column_filter( tmp_row, len( new_header ), df.loc[ row, col_desc ] )
+            new_row = column_filter( tmp_row, len( new_header ), df.loc[ row, col_desc ], df.loc[ row ])
             # print( test )
             # print(len(test))
             if len( new_row ) == len( new_header ):
@@ -187,6 +203,9 @@ def main():
     except:
         print( "No files in this path: ", tmp_output_path )
     new_csv.to_csv( tmp_output_path, index=False )
+
+    global total_commision
+    print( "total commision: $" + str(total_commision))
 
 
 
