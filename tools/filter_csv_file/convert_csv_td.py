@@ -19,22 +19,32 @@ import pandas as pd
 import os
 
 
-def column_filter( pRow, pCell ):
+def column_filter( pRow, pColLen, pCell):
     # print( pCell )
 
     # Variables
     new_row = []
+    
     f_call = 'Call'
     f_put = 'Put'
     f_sold = 'Sold'
     f_bought = 'Bought'
-    option_col = [ f_call, f_put ]
-    ticker_col = [ f_sold, f_bought ]
-    
-    # Filters out all buys / sells for options
-    if any( x in pCell for x in option_col ):
-        row_str = pCell.split()
+    f_assignment = 'REMOVAL OF OPTION DUE TO ASSIGNMENT'
+    f_expiration = 'REMOVAL OF OPTION DUE TO EXPIRATION'
+    f_margin = 'MARGIN INTEREST ADJUSTMENT'
+    f_balance = 'FREE BALANCE INTEREST ADJUSTMENT'
+    f_funding = 'CLIENT REQUESTED ELECTRONIC FUNDING RECEIPT'
+    f_exchange = 'MANDATORY - EXCHANGE'
 
+    
+    option_col = [ f_call, f_put ]
+    stock_col = [ f_sold, f_bought ]
+    ticker_col = [ f_sold, f_bought ]
+    row_str = pCell.split()
+
+    # Filters out options
+    if any( x in pCell for x in option_col ):
+        
         # Saving values
         action = row_str[ 0 ]
         amount = row_str[ 1 ]  
@@ -59,12 +69,51 @@ def column_filter( pRow, pCell ):
         new_row.append( price )
         # new_row.append( total )
 
-    else: 
-        # Filler row
-        i = 9 - 1
+    # Filters out Expiration
+    elif f_expiration in pCell:
+    # elif any( x in pCell for x in f_expiration ):
+        # print("Option Expriation: " + str(pRow) + " " + pCell )
         new_row.append( pRow )
-        for cur in range( i ):
+        for cur in range( pColLen - 1 ):
             new_row.append( 'NaN')
+
+    # Filters out Assignment
+    elif f_assignment in pCell:
+    # elif any( x in pCell for x in f_expiration ):
+        # print("Option Expriation: " + str(pRow) + " " + pCell )
+        new_row.append( pRow )
+        for cur in range( pColLen - 1 ):
+            new_row.append( 'NaN')
+
+    # Filters out adjustments
+    elif any( x in pCell for x in ( f_balance, f_margin ) ):
+        # print("Balance: " + str(pRow) + " " + pCell )
+        new_row.append( pRow )
+        for cur in range( pColLen - 1 ):
+            new_row.append( 'NaN')
+
+    # Filters out Assignment
+    elif f_exchange in pCell:
+    # elif any( x in pCell for x in f_expiration ):
+        # print("Option Expriation: " + str(pRow) + " " + pCell )
+        new_row.append( pRow )
+        for cur in range( pColLen - 1 ):
+            new_row.append( 'NaN')
+
+
+    elif any( x in row_str[ 0 ] for x in stock_col ):
+        new_row.append( pRow )
+        for cur in range( pColLen - 1 ):
+            new_row.append( 'NaN')
+
+    # Filters out funding receipts 
+    elif f_funding in pCell:
+        print( "funding: " + str(pRow) )
+        new_row = []
+    
+    else:
+        print( "ERROR. Nothing found." + " " + pCell)
+        new_row = []
 
     return new_row
 
@@ -110,13 +159,17 @@ def main():
 
     # Filters information to from descripton in every row
     df[ col_num ] = 0
+    tmp_row = 0     # Used to keep track of new rows. Some of the old rows will be skipped. 
     for row in range( len_row ):
         # print( row )
         if row != len_row - 1:
-            test = column_filter( row, df.loc[ row, col_desc ] )
+            new_row = column_filter( tmp_row, len( new_header ), df.loc[ row, col_desc ] )
             # print( test )
             # print(len(test))
-            new_csv.loc[ row ] = test
+            if len( new_row ) == len( new_header ):
+                new_csv.loc[ tmp_row ] = new_row
+                tmp_row += 1
+
             # new_csv.append( test )
             # print( df.loc[ row, col_desc ] )
     
