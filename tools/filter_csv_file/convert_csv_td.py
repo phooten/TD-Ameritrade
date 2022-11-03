@@ -24,14 +24,13 @@
 import csv
 import os
 import pandas as pd
-import re
 import sys
 
 # TODO: Make a library for personal use
 # Global Variables
-glob_error = "ERROR: "
+global_error = "ERROR: "
 NaN = "NaN"
-glob_commission = 0.65
+global_commission = 0.65
 
 # This needs to corrolate with 
 def makeRow( pExpDate=NaN, pType=NaN, pAction=NaN, pTicker=NaN, pStrike=NaN, pAmount=NaN, pPrice=NaN, pCommission=NaN ):
@@ -86,7 +85,7 @@ def dateFormatConversion( pDate ):
     elif month == 'Dec':
         date = '12'
     else:
-        print( glob_error + "date_list[0] not expected: " + month)
+        print( global_error + "date_list[0] not expected: " + month)
     
     # Formats days with leading 0
     if len(day) < 2:
@@ -216,7 +215,7 @@ def filterDescriptionColumn( pColLen, pCell, pRow ):
         
     # Error if anything else
     else:
-        print( glob_error + "Nothing found." + " " + pCell)
+        print( global_error + "Nothing found." + " " + pCell)
         f_row = []
 
     return f_row
@@ -238,20 +237,20 @@ def main():
     # Checking first argument of python script
     if len( sys.argv ) == 2:
         if ".csv" not in sus.argv[1]:
-            print( glob_error + "first argument is not .csv" )
+            print( global_error + "first argument is not .csv" )
             return -1
         else:
             csv_input_path = sys.argv[1]
     
 
     # Column Names
-    col_date = 'DATE'
-    col_desc = 'DESCRIPTION'
-    col_id = 'TRANSACTION ID'
-    col_num = 'NUMBER'
     col_price = 'PRICE'
+    col_desc = 'DESCRIPTION'
+    col_date = 'DATE'
     col_qaun = 'QUANTITY'
     col_tick = 'SYMBOL'
+    col_num = 'NUMBER'
+    col_id = 'TRANSACTION ID'
 
 
     # Characteristics of CSV 
@@ -264,7 +263,8 @@ def main():
     # TODO: NOTE, if this changes, makeRow needs to too 
     header = [ 'DATE OF ACTION', 'DATE OF EXPIRATION', 'TYPE', 'ACTION', 'TICKER', 'STRIKE', 'AMOUNT', 'COST', 'TOTAL COMMISION','ORIGINAL ROW' ]
     total_columns = len( header )
-    extra_columns = len( header ) - 8   # 7 base columns
+    base_coumns = 8
+    extra_columns = len( header ) - base_coumns
     new_csv = pd.DataFrame( columns=header )
 
 
