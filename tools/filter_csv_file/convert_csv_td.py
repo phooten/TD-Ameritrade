@@ -22,60 +22,97 @@
 
 # Libraries
 import csv
-import pandas as pd
 import os
+import pandas as pd
+import sys
 
-total_commision = 0
+# TODO: Make a library for personal use
+# Global
+glob_error = "ERROR: "
 
-def column_filter( pCurrRow, pColLen, pCell, pRow ):
-    # print( pCell )
-
+# Converts 'MM DD YYYY' ( month day year ) to 'MM/DD/YYYY' 
+def dateFormatConversion( pDate ):
     # Variables
-    new_row = []
+    date_list = pDate.split()
+    month = date_list[0]
+    day = date_list[1]
+    year = date_list[2]
     
-    f_call = 'Call'
-    f_put = 'Put'
-    f_sold = 'Sold'
-    f_bought = 'Bought'
-    f_assignment = 'REMOVAL OF OPTION DUE TO ASSIGNMENT'
-    f_expiration = 'REMOVAL OF OPTION DUE TO EXPIRATION'
-    f_margin = 'MARGIN INTEREST ADJUSTMENT'
-    f_balance = 'FREE BALANCE INTEREST ADJUSTMENT'
-    f_funding = 'CLIENT REQUESTED ELECTRONIC FUNDING RECEIPT'
-    f_exchange = 'MANDATORY - EXCHANGE'
+    # TODO: switch statement isn't supported in python?
+    # Assign number for month
+    if month == 'Jan':
+        date = '1'
+    elif month == 'Feb':
+        date = '2'
+    elif month == 'Mar':
+        date = '3'
+    elif month == 'Apr':
+        date = '4'
+    elif month == 'May':
+        date = '5'
+    elif month == 'Jun':
+        date = '6'
+    elif month == 'Jul':
+        date = '7'
+    elif month == 'Aug':
+        date = '8'
+    elif month == 'Sep':
+        date = '9'
+    elif month == 'Oct':
+        date = '10'
+    elif month == 'Nov':
+        date = '11'
+    elif month == 'Dec':
+        date = '12'
+    else:
+        print( glob_error + "date_list[0] not expected: " + month)
+    
+    # Finalize date format
+    date += '/' + day + '/' + year
 
-    
-    option_col = [ f_call, f_put ]
-    stock_col = [ f_sold, f_bought ]
-    ticker_col = [ f_sold, f_bought ]
+    return date
+
+def filterDescriptionColumn( pCurrRow, pColLen, pCell, pRow ):
+    # Variables: General
+    f_row = []
     row_str = pCell.split()
 
-    # Filters out Expiration
+    # Variable: Filters 
+    f_assignment = 'REMOVAL OF OPTION DUE TO ASSIGNMENT'
+    f_expiration = 'REMOVAL OF OPTION DUE TO EXPIRATION'
+    f_exchange = 'MANDATORY - EXCHANGE'
+    f_balance = 'FREE BALANCE INTEREST ADJUSTMENT'
+    f_funding = 'CLIENT REQUESTED ELECTRONIC FUNDING RECEIPT'
+    f_margin = 'MARGIN INTEREST ADJUSTMENT'
+    f_bought = 'Bought'
+    f_sold = 'Sold'
+    f_call = 'Call'
+    f_put = 'Put'
+    f_list_option = [ f_call, f_put ]
+    f_list_stock = [ f_sold, f_bought ]
+    f_list_ticker = [ f_sold, f_bought ]
+
+    
+    # Filters out 'removal due to expiration'
     if f_expiration in pCell:
-    # elif any( x in pCell for x in f_expiration ):
-        # print("Option Expriation: " + str(pCurrRow) + " " + pCell )
-        new_row.append( pCurrRow )
+        f_row.append( pCurrRow )
         for cur in range( pColLen - 1 ):
-            new_row.append( 'NaN')
+            f_row.append( 'NaN')
 
-    # Filters out Assignment
+    # Filters out 'removal due to assignment'
     elif f_assignment in pCell:
-    # elif any( x in pCell for x in f_expiration ):
-        # print("Option Expriation: " + str(pCurrRow) + " " + pCell )
-        new_row.append( pCurrRow )
+        f_row.append( pCurrRow )
         for cur in range( pColLen - 1 ):
-            new_row.append( 'NaN')
+            f_row.append( 'NaN')
 
-    # Filters out adjustments
+    # Filters out 'balance adjustments'
     elif any( x in pCell for x in ( f_balance, f_margin ) ):
-        # print("Balance: " + str(pCurrRow) + " " + pCell )
-        new_row.append( pCurrRow )
+        f_row.append( pCurrRow )
         for cur in range( pColLen - 1 ):
-            new_row.append( 'NaN')
+            f_row.append( 'NaN')
 
-    # Filters out options
-    elif any( x in pCell for x in option_col ):
-        
+    # Filters out 'all options'
+    elif any( x in pCell for x in f_list_option ):
         # Saving values
         action = row_str[ 0 ]
         amount = row_str[ 1 ]  
@@ -87,72 +124,67 @@ def column_filter( pCurrRow, pColLen, pCell, pRow ):
         price = row_str[ 9 ]
         commision = pRow[ 6 ]
 
-        # print( commision )
-        if commision >= 0:
-            global total_commision 
-            # print( str( total_commision ) + " at row: " + str( pCurrRow) )
-            total_commision += commision
-        else:
-            print( "type: " + str(type(commision)) + " value: " + str( commision) + " row: " + str(pCurrRow) )
-        
+        # Convert date to MM/DD/YYY
+        converted_date = dateFormatConversion( date )
+
         # Creating a new row
-        
-        new_row.append( pCurrRow )
-        new_row.append( "DATE" )
-        new_row.append( date )
-        new_row.append( opt_type )
-        new_row.append( action )
-        new_row.append( ticker )
-        new_row.append( strike )
-        new_row.append( amount )
-        new_row.append( price )
-        # new_row.append( total )
+        f_row.append( pCurrRow )
+        f_row.append( converted_date )
+        f_row.append( opt_type )
+        f_row.append( action )
+        f_row.append( ticker )
+        f_row.append( strike )
+        f_row.append( amount )
+        f_row.append( price )
+        # f_row.append( total )
 
-    # Filters out Assignment
+    # Filters out 'removal due to assignment'
     elif f_exchange in pCell:
-    # elif any( x in pCell for x in f_expiration ):
-        # print("Option Expriation: " + str(pCurrRow) + " " + pCell )
-        new_row.append( pCurrRow )
+        f_row.append( pCurrRow )
         for cur in range( pColLen - 1 ):
-            new_row.append( 'NaN')
+            f_row.append( 'NaN')
 
-
-    elif any( x in row_str[ 0 ] for x in stock_col ):
-        new_row.append( pCurrRow )
+    # Filters out 'any stock buy/sell' 
+    elif any( x in row_str[ 0 ] for x in f_list_stock ):
+        f_row.append( pCurrRow )
         for cur in range( pColLen - 1 ):
-            new_row.append( 'NaN')
+            f_row.append( 'NaN')
 
     # Filters out funding receipts 
     elif f_funding in pCell:
-        # print( "funding: " + str(pCurrRow) )
-        new_row = []
+        f_row = []
     
+    # Error if anything else
     else:
-        print( "ERROR. Nothing found." + " " + pCell)
-        new_row = []
+        print( glob_error + "Nothing found." + " " + pCell)
+        f_row = []
 
-    return new_row
-
-        
-        # s = ', '
-        # ans = action + s + amount + s + ticker + s + date + s + strike + s + opt_type + s + price 
-        # print( ans )
-    
-    # elif :
+    return f_row
 
 
 # Main:
 def main():
-    # Variables
     # TODO: find the newest file by default
     # TODO: make this runable from anywhere
+
+    # Variables: CSV files
     csv_input_name = 'transactions.csv'
     csv_input_path = 'input-files/' + csv_input_name
     csv_output_name = 'output.csv'
     csv_output_path = 'output/' + csv_output_name
     tmp_output_path = 'output/' + 'testing.csv'
 
-    # Columns
+
+    # Checking first argument of python script
+    if len( sys.argv ) == 2:
+        if ".csv" not in sus.argv[1]:
+            print( glob_error + "first argument is not .csv" )
+            return -1
+        else:
+            csv_input_path = sys.argv[1]
+    
+
+    # Column Names
     col_date = 'DATE'
     col_desc = 'DESCRIPTION'
     col_id = 'TRANSACTION ID'
@@ -169,22 +201,28 @@ def main():
     # print( df.shape )
     # print( df.dtypes )
     
-    new_header = [ 'INDEX', 'DATE', 'EXPIRATION DATE', 'TYPE', 'ACTION', 'TICKER', 'STRIKE', 'AMOUNT', 'COST' ]
+    
+    new_header = [ 'INDEX', 'DATE OF ACTION', 'DATE OF EXPIRATION', 'TYPE', 'ACTION', 'TICKER', 'STRIKE', 'AMOUNT', 'COST' ]
     new_csv = pd.DataFrame( columns=new_header )
-    # new_csv.reset_index(drop=True)
 
-    # Filters information to from descripton in every row
+
+    # Filters information from the 'descripton' column in every row
     df[ col_num ] = 0
-    tmp_row = 0     # Used to keep track of new rows. Some of the old rows will be skipped. 
+    refined_csv_row = 0     # Used to keep track of new rows. Some of the old rows will be skipped. 
     for row in range( len_row ):
-        # print( row )
+        
         if row != len_row - 1:
-            new_row = column_filter( tmp_row, len( new_header ), df.loc[ row, col_desc ], df.loc[ row ])
-            # print( test )
-            # print(len(test))
-            if len( new_row ) == len( new_header ):
-                new_csv.loc[ tmp_row ] = new_row
-                tmp_row += 1
+            tmp_row = filterDescriptionColumn( refined_csv_row, len( new_header ) - 1, df.loc[ row, col_desc ], df.loc[ row ] )
+            
+            if len( tmp_row ) == len( new_header ) -1:
+                # Adding in date of action
+                tmp_row.insert( 1, df.loc[ row, col_date ] )
+                
+                # Insert new row in DataFrame
+                print( tmp_row )
+            # new_csv.loc[ refined_csv_row ] = tmp_row
+            # refined_csv_row += 1
+
 
             # new_csv.append( test )
             # print( df.loc[ row, col_desc ] )
@@ -197,16 +235,12 @@ def main():
     #     print( "No files in this path: ", csv_output_path )
     # df.to_csv( csv_output_path )
     
-    # new_csv.set_index( 'INDEX' )
-    try:
-        os.remove( tmp_output_path )
-    except:
-        print( "No files in this path: ", tmp_output_path )
-    new_csv.to_csv( tmp_output_path, index=False )
-
-    global total_commision
-    print( "total commision: $" + str(total_commision))
-
+# new_csv.set_index( 'INDEX' )
+# try:
+#     os.remove( tmp_output_path )
+# except:
+#     print( "No files in this path: ", tmp_output_path )
+# new_csv.to_csv( tmp_output_path, index=False )
 
 
 if __name__ == "__main__":
