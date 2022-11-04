@@ -24,31 +24,37 @@ global_error = "Error: "
 
 def analyzeCsv( pPath ):
     # Check if the file exists
-    print( "Dose " + pPath + " exist?" )
+    print( "Does " + pPath + " exist?" )
     if os.path.exists( pPath ):
         print( "Yes." )
     else:
-        print( "No.")
+        print( "No. Script stopping. It's returning.")
+        return
     print()
     
     # If file exists, then figure out what it does
     df = pd.read_csv( pPath, sep=',' )
-    # len_row, len_col = df.shape
+    len_row, len_col = df.shape
     # print( len_row )
     # print ( len_col )
+    print( calc_total_commision( df ) )
 
-    df.head()
-    # for row in df:
-    #     print( row )
+    # print( df )
     # for row in range( len_row ):
-        # print( df.loc[ row ] ) # This prints in a block form, not what you want
+    #     print( df.loc[ row ] )
+    
 
 
-
-def calc_total_commision():
+def calc_total_commision( pDataFrame ):
     # Variables
     commision = 0
+    len_row, len_col = pDataFrame.shape
+    for row in range( len_row ):
+        # TODO: This is hard coded, don't like
+        # if pDataFrame.loc[ row, 7 ] != NaN:
+        commision += int( pDataFrame.loc[ row, 7 ] )
 
+    print( "Total Comission: " + str( commision ) )
     # Cycle through every row:
 
 

@@ -272,7 +272,6 @@ def main():
     df[ col_num ] = 0
     refined_csv_row = 0
     for row in range( len_row ):
-        
         if row != len_row - 1:
             tmp_row = filterDescriptionColumn( len( header ) - extra_columns, df.loc[ row, col_desc ], df.loc[ row ] )
             
