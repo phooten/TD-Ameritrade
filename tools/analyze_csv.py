@@ -13,6 +13,7 @@
 
 # Libraries
 import csv
+from enum import Enum
 import os
 import pandas as pd
 import sys
@@ -39,37 +40,55 @@ def analyzeCsv( pPath ):
     # If file exists, then figure out what it does
     df = pd.read_csv( pPath, sep=',' )
     len_row, len_col = df.shape
-    
+        
+    # TODO: User can select total of everything, or total of single items
     # Start of Logic:
     #   - commission count
     #   - Ticker Count
+    class Mode(Enum):
+        TOTAL = 1
+        MULTIPLE = 2
+    mode = Mode.MULTIPLE
+    # mode = Mode.TOTAL
+
     commission = 0
-    ticker_lst = [ "MVIS", "PTON"]
-    ticker_count = []
-    for i in ticker_lst:
-        ticker_count.append( 0 )
+    mult_ticker_lst = [ "MVIS", "PTON"]
+    mult_ticker_count = []
+    mult_commission_count = []
+    for i in mult_ticker_lst:
+        mult_ticker_count.append( 0 )
+        mult_commission_count.append( 0 )
 
     for row in range( len_row ):
         if row != len_row - 1:
 
-            # Commission Count
-            # TODO: Spell correct commission
-            curr = df.loc[ row, "TOTAL COMMISION" ]
-            if NaN != str( curr ) :
-                commission += float( curr )
-            
-            curr = df.loc[ row, "TICKER" ]
-            for i in range( len( ticker_lst ) ):
-                if curr == ticker_lst[ i ]:
-                    ticker_count[ i ] += 1
+            if mode == Mode.TOTAL:
+                # Commission Count
+                # TODO: Spell correct commission
+                curr = df.loc[ row, "TOTAL COMMISION" ]
+                if NaN != str( curr ) :
+                    commission += float( curr )
+
+            elif mode == Mode.MULTIPLE:
+                curr = df.loc[ row, "TICKER" ]
+                for i in range( len( mult_ticker_lst ) ):
+                    if curr == mult_ticker_lst[ i ]:
+                        mult_ticker_count[ i ] += 1
+                        if NaN != str( df.loc[ row, "TOTAL COMMISION" ] ):
+                            mult_commission_count[ i ] = float( df.loc[ row, "TOTAL COMMISION" ] )
+
             
             
     # Prints out results
-    comm_str = f'{commission:.2f}'
-    print( "Total Commission:  $ " + comm_str )
-    print( "Ticker count: " )
-    for i in range( len( ticker_lst ) ):
-        print( "\t" + ticker_lst[ i ] + "  " + str( ticker_count[ i ] ) )
+    if mode == Mode.TOTAL:
+        comm_str = f'{commission:.2f}'
+        print( "Total Commission:  $ " + comm_str )
+        # print( "All Action Count:  $ " + comm_str )
+    
+    elif mode == Mode.MULTIPLE:
+        print( "Ticker count: " )
+        for i in range( len( mult_ticker_lst ) ):
+            print( "\tTraded " + mult_ticker_lst[ i ] + " " + str( mult_ticker_count[ i ] ) + " times, spent $ " + str( f'{mult_commission_count[ i ]:.2f}') + " in commission, ")
 
 
 def calc_total_commision( pDataFrame ):
