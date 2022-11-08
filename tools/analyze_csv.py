@@ -20,7 +20,10 @@ import sys
 
 # TODO: See other python script. Add this to global library
 global_error = "Error: "
+NaN = "nan"
 
+# TODO: Split up analyze CSV into smaller functions
+    
 
 def analyzeCsv( pPath ):
     # Check if the file exists
@@ -32,26 +35,41 @@ def analyzeCsv( pPath ):
         return
     print()
     
+
     # If file exists, then figure out what it does
     df = pd.read_csv( pPath, sep=',' )
     len_row, len_col = df.shape
+    
+    # Start of Logic:
+    #   - commission count
+    #   - Ticker Count
     commission = 0
+    ticker_lst = [ "MVIS", "PTON"]
+    ticker_count = []
+    for i in ticker_lst:
+        ticker_count.append( 0 )
+
     for row in range( len_row ):
         if row != len_row - 1:
-            commission = int( df.loc[ 'TOTAL COMMISSION' ] )
-            print( str( commission ) )
-            # tmp_row = filterDescriptionColumn( len( header ) - extra_columns, df.loc[ row, col_desc ], df.loc[ row ] )
-    
-    # for row in df:
-    #     print( df.loc[ row ])
-    # print( len_row )
-    # print ( len_col )
-    # print( calc_total_commision( df ) )
 
-    # print( df )
-    # for row in range( len_row ):
-    #     print( df.loc[ row ] )
-    
+            # Commission Count
+            # TODO: Spell correct commission
+            curr = df.loc[ row, "TOTAL COMMISION" ]
+            if NaN != str( curr ) :
+                commission += float( curr )
+            
+            curr = df.loc[ row, "TICKER" ]
+            for i in range( len( ticker_lst ) ):
+                if curr == ticker_lst[ i ]:
+                    ticker_count[ i ] += 1
+            
+            
+    # Prints out results
+    comm_str = f'{commission:.2f}'
+    print( "Total Commission:  $ " + comm_str )
+    print( "Ticker count: " )
+    for i in range( len( ticker_lst ) ):
+        print( "\t" + ticker_lst[ i ] + "  " + str( ticker_count[ i ] ) )
 
 
 def calc_total_commision( pDataFrame ):
