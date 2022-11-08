@@ -26,7 +26,7 @@ def analyzeCsv( pPath ):
     # Check if the file exists
     print( "Does " + pPath + " exist?" )
     if os.path.exists( pPath ):
-        print( "Yes." )
+        print( "The path " + pPath + " exists." )
     else:
         print( "No. Script stopping. It's returning.")
         return
@@ -35,9 +35,18 @@ def analyzeCsv( pPath ):
     # If file exists, then figure out what it does
     df = pd.read_csv( pPath, sep=',' )
     len_row, len_col = df.shape
+    commission = 0
+    for row in range( len_row ):
+        if row != len_row - 1:
+            commission = int( df.loc[ 'TOTAL COMMISSION' ] )
+            print( str( commission ) )
+            # tmp_row = filterDescriptionColumn( len( header ) - extra_columns, df.loc[ row, col_desc ], df.loc[ row ] )
+    
+    # for row in df:
+    #     print( df.loc[ row ])
     # print( len_row )
     # print ( len_col )
-    print( calc_total_commision( df ) )
+    # print( calc_total_commision( df ) )
 
     # print( df )
     # for row in range( len_row ):
