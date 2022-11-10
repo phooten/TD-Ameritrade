@@ -1,0 +1,21 @@
+# ninja log v5
+0	260	1668061004144205836	main_autogen/timestamp	b122f9a61dc0cac6
+0	260	1668061004144205836	main_autogen/mocs_compilation.cpp	b122f9a61dc0cac6
+0	260	1668061004144205836	/Users/phoot/bin/code/TD-Ameritrade/gui/build-main-Qt_6_4_0_for_macOS-Debug/main_autogen/timestamp	b122f9a61dc0cac6
+0	260	1668061004144205836	/Users/phoot/bin/code/TD-Ameritrade/gui/build-main-Qt_6_4_0_for_macOS-Debug/main_autogen/mocs_compilation.cpp	b122f9a61dc0cac6
+260	1001	1668061004889244823	CMakeFiles/main.dir/main_autogen/mocs_compilation.cpp.o	cf0180874b16d557
+260	1005	1668061004894195138	CMakeFiles/main.dir/main.cpp.o	e31b610dc147d15a
+260	1022	1668061004911875201	CMakeFiles/main.dir/mainwindow.cpp.o	a74679ebdade6470
+1022	1120	1668061005011666625	main.app/Contents/MacOS/main	8d636b4ae6714c56
+4	39	1668061128864022700	main_autogen/timestamp	b122f9a61dc0cac6
+4	39	1668061128864022700	main_autogen/mocs_compilation.cpp	b122f9a61dc0cac6
+4	39	1668061128864022700	/Users/phoot/bin/code/TD-Ameritrade/gui/build-main-Qt_6_4_0_for_macOS-Debug/main_autogen/timestamp	b122f9a61dc0cac6
+4	39	1668061128864022700	/Users/phoot/bin/code/TD-Ameritrade/gui/build-main-Qt_6_4_0_for_macOS-Debug/main_autogen/mocs_compilation.cpp	b122f9a61dc0cac6
+42	926	1668061129746075137	CMakeFiles/main.dir/mainwindow.cpp.o	a74679ebdade6470
+926	1004	1668061129828198456	main.app/Contents/MacOS/main	8d636b4ae6714c56
+4	40	1668061273981269971	main_autogen/timestamp	b122f9a61dc0cac6
+4	40	1668061273981269971	main_autogen/mocs_compilation.cpp	b122f9a61dc0cac6
+4	40	1668061273981269971	/Users/phoot/bin/code/TD-Ameritrade/gui/build-main-Qt_6_4_0_for_macOS-Debug/main_autogen/timestamp	b122f9a61dc0cac6
+4	40	1668061273981269971	/Users/phoot/bin/code/TD-Ameritrade/gui/build-main-Qt_6_4_0_for_macOS-Debug/main_autogen/mocs_compilation.cpp	b122f9a61dc0cac6
+43	812	1668061274750168227	CMakeFiles/main.dir/mainwindow.cpp.o	a74679ebdade6470
+812	892	1668061274832013333	main.app/Contents/MacOS/main	8d636b4ae6714c56
