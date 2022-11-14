@@ -10,10 +10,9 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QColumnView>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
@@ -25,50 +24,41 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
-    QAction *actionCase_1;
-    QAction *actionCase_2;
     QWidget *centralwidget;
-    QTextEdit *textEdit;
-    QPushButton *pushButton;
+    QTextEdit *tickerText;
+    QPushButton *confirmButton;
+    QColumnView *columnView;
+    QPushButton *exitButton;
     QMenuBar *menubar;
-    QMenu *menuName_of_the_window;
-    QMenu *menuDrop_down_menu;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(800, 600);
-        actionCase_1 = new QAction(MainWindow);
-        actionCase_1->setObjectName("actionCase_1");
-        actionCase_2 = new QAction(MainWindow);
-        actionCase_2->setObjectName("actionCase_2");
+        MainWindow->resize(551, 294);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
-        textEdit = new QTextEdit(centralwidget);
-        textEdit->setObjectName("textEdit");
-        textEdit->setGeometry(QRect(10, 10, 221, 31));
-        pushButton = new QPushButton(centralwidget);
-        pushButton->setObjectName("pushButton");
-        pushButton->setGeometry(QRect(10, 40, 131, 32));
+        tickerText = new QTextEdit(centralwidget);
+        tickerText->setObjectName("tickerText");
+        tickerText->setGeometry(QRect(10, 10, 221, 31));
+        confirmButton = new QPushButton(centralwidget);
+        confirmButton->setObjectName("confirmButton");
+        confirmButton->setGeometry(QRect(10, 50, 131, 32));
+        columnView = new QColumnView(centralwidget);
+        columnView->setObjectName("columnView");
+        columnView->setGeometry(QRect(10, 90, 521, 91));
+        exitButton = new QPushButton(centralwidget);
+        exitButton->setObjectName("exitButton");
+        exitButton->setGeometry(QRect(460, 190, 71, 32));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 800, 22));
-        menuName_of_the_window = new QMenu(menubar);
-        menuName_of_the_window->setObjectName("menuName_of_the_window");
-        menuDrop_down_menu = new QMenu(menubar);
-        menuDrop_down_menu->setObjectName("menuDrop_down_menu");
+        menubar->setGeometry(QRect(0, 0, 551, 37));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");
         MainWindow->setStatusBar(statusbar);
-
-        menubar->addAction(menuName_of_the_window->menuAction());
-        menubar->addAction(menuDrop_down_menu->menuAction());
-        menuDrop_down_menu->addAction(actionCase_1);
-        menuDrop_down_menu->addAction(actionCase_2);
 
         retranslateUi(MainWindow);
 
@@ -78,17 +68,14 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        actionCase_1->setText(QCoreApplication::translate("MainWindow", "Case 1", nullptr));
-        actionCase_2->setText(QCoreApplication::translate("MainWindow", "Case 2", nullptr));
-        textEdit->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        tickerText->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Enter ticker symbol here...</p></body></html>", nullptr));
-        pushButton->setText(QCoreApplication::translate("MainWindow", "Confirm Ticker", nullptr));
-        menuName_of_the_window->setTitle(QCoreApplication::translate("MainWindow", "Name of the window.", nullptr));
-        menuDrop_down_menu->setTitle(QCoreApplication::translate("MainWindow", "Drop down menu.", nullptr));
+        confirmButton->setText(QCoreApplication::translate("MainWindow", "Confirm Ticker", nullptr));
+        exitButton->setText(QCoreApplication::translate("MainWindow", "Exit", nullptr));
     } // retranslateUi
 
 };
