@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QColumnView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
@@ -29,6 +30,7 @@ public:
     QPushButton *confirmButton;
     QColumnView *columnView;
     QPushButton *exitButton;
+    QCheckBox *selectAll;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -51,6 +53,10 @@ public:
         exitButton = new QPushButton(centralwidget);
         exitButton->setObjectName("exitButton");
         exitButton->setGeometry(QRect(460, 190, 71, 32));
+        exitButton->setAutoDefault(false);
+        selectAll = new QCheckBox(centralwidget);
+        selectAll->setObjectName("selectAll");
+        selectAll->setGeometry(QRect(160, 50, 85, 30));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
@@ -74,8 +80,9 @@ public:
 "hr { height: 1px; border-width: 0; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Enter ticker symbol here...</p></body></html>", nullptr));
-        confirmButton->setText(QCoreApplication::translate("MainWindow", "Confirm Ticker", nullptr));
+        confirmButton->setText(QCoreApplication::translate("MainWindow", "Load Information", nullptr));
         exitButton->setText(QCoreApplication::translate("MainWindow", "Exit", nullptr));
+        selectAll->setText(QCoreApplication::translate("MainWindow", "All", nullptr));
     } // retranslateUi
 
 };
