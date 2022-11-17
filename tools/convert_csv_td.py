@@ -227,11 +227,12 @@ def main():
     # TODO: make this runable from anywhere
 
     # Variables: CSV files
+    io_path = "../io/"
     csv_input_name = 'transactions.csv'
-    csv_input_path = 'input-files/' + csv_input_name
+    csv_input_path = io_path + 'input/' + csv_input_name
     csv_output_name = 'output.csv'
-    csv_output_path = 'output/' + csv_output_name
-    tmp_output_path = 'output/' + 'testing.csv'
+    csv_output_path = io_path + 'output/' + csv_output_name
+    tmp_output_path = io_path + 'output/' + 'testing.csv'
 
 
     # Checking first argument of python script
