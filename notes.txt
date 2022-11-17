@@ -1,7 +1,0 @@
-.txt file is replacement for .pro file in QT
-
-
-
-
-
-
