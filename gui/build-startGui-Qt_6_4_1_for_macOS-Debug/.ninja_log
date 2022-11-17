@@ -1,0 +1,9 @@
+# ninja log v5
+0	243	1668668559268208185	startGui_autogen/timestamp	a6219d3b167e7658
+0	243	1668668559268208185	startGui_autogen/mocs_compilation.cpp	a6219d3b167e7658
+0	243	1668668559268208185	/Users/phoot/bin/code/TD-Ameritrade/gui/build-startGui-Qt_6_4_1_for_macOS-Debug/startGui_autogen/timestamp	a6219d3b167e7658
+0	243	1668668559268208185	/Users/phoot/bin/code/TD-Ameritrade/gui/build-startGui-Qt_6_4_1_for_macOS-Debug/startGui_autogen/mocs_compilation.cpp	a6219d3b167e7658
+243	975	1668668560002439981	CMakeFiles/startGui.dir/startGui_autogen/mocs_compilation.cpp.o	de73383bc9ac26ca
+243	989	1668668560017123657	CMakeFiles/startGui.dir/main.cpp.o	944901f9c96010fc
+243	1008	1668668560037484415	CMakeFiles/startGui.dir/mainwindow.cpp.o	2f32ec59102c69ee
+1009	1109	1668668560141141645	startGui.app/Contents/MacOS/startGui	63e2e74a4d2096a3
