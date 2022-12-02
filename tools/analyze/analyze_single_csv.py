@@ -49,6 +49,8 @@ def findUniqueTickers( pPath ):
         if curr not in ticker_list:
             if not any( x in str( curr ) for x in ["nan", "NOT DONE"] ):
                 ticker_list.append( curr )
+
+    ticker_list = sorted( ticker_list )
     
     print( 'Unique tickers: ' + str( len( ticker_list ) ) )
 
@@ -117,7 +119,7 @@ def analyzeCsv( pPath, pTicker ):
 
                 else:
                     print( "ISSUE: AMOUNT" )
-            elif group == "Assigment":
+            #elif group == "Assigment":
                 #if 
                     
                 #elif
