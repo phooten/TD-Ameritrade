@@ -158,29 +158,34 @@ def calc_total_commision( pDataFrame ):
 
 
 def main():
-    ticker="PTON"
-
     # TODO: if no input, find the most recent csv
     # TODO: Could make this into a function. Things could be more complicated with the year
-    
+
+
     # Selects the path to csv to analyze
     if len( sys.argv ) == 2:
         csv_input_path = sys.argv[ 1 ]
-    
+
     elif len( sys.argv ) > 2:
         csv_input_path = global_error + "More than 2 arguments"
         return -1
-        
+
     else:
         # TODO: This file name is the same as in convert_csv_td.py
         csv_input_name = 'testing.csv'
         csv_input_path = '../../io/output/' + csv_input_name
-    
+
+
     if( False == doesFileExist( csv_input_path ) ):
         exit( 1 )
 
-    ticker_list = findUniqueTickers( csv_input_path )
 
+    user_input = input( 'Enter a Ticker for single, or <enter> for all...  ' )
+    if user_input == '':
+        ticker_list = findUniqueTickers( csv_input_path )
+
+    else:
+        ticker_list = [ user_input ]
 
     for ticker in ticker_list:
         # print( str( ticker ) )
