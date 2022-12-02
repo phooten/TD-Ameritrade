@@ -23,6 +23,9 @@ import sys
 global_error = "Error: "
 NaN = "nan"
 
+def StrRound( pNumber, pDec=2):
+    return str( round( pNumber, pDec ) )
+
 # TODO: Split up analyze CSV into smaller functions
 def doesFileExist( pPath ):
     # Check if the file exists
@@ -65,9 +68,11 @@ def analyzeCsv( pPath, pTicker ):
     #   - # of stock currently own
     #   - how many options trades
 
+    total_pl = 0            # profit / loss
     total_commission = 0
     opt_comission = 0
     opt_trades = 0
+    total_stock = 0
     stock_trades = 0
 
     for row in range( len_row - 1 ):
@@ -75,13 +80,16 @@ def analyzeCsv( pPath, pTicker ):
         curr = df.loc[ row, "TICKER" ]
         if( curr == pTicker ):
 
-            # Counts options trades
-
+            action = df.loc[ row, "ACTION" ]
+            amount = df.loc[ row, "AMOUNT" ]
             comm = df.loc[ row, "TOTAL COMMISION" ]
+            cost = df.loc[ row, "COST" ]
+            group = df.loc[ row, "TYPE" ]
+
             if NaN != str( comm ) :
                     total_commission += float( comm )
 
-            if any( tmp in df.loc[ row, "TYPE" ] for tmp in [ "Put", "Call" ] ):
+            if any( tmp in group for tmp in [ "Put", "Call" ] ):
                 opt_trades += 1
                 
                 # TODO: Spell correct commission
@@ -89,6 +97,30 @@ def analyzeCsv( pPath, pTicker ):
                 if NaN != str( comm ) :
                     opt_comission += float( comm )
 
+            if NaN != str( cost ):
+                if action == "Bought":
+                    total_pl -= cost
+
+                elif action == "Sold":
+                    total_pl += cost
+
+                else:
+                    print( "ISSUE: COST" )
+
+            # TODO: Need to finish the Assignment portion of the xml
+            if group == "Stock":
+                if action == "Bought":
+                    total_stock -= amount
+
+                elif action == "Sold":
+                    total_stock += amount
+
+                else:
+                    print( "ISSUE: AMOUNT" )
+            elif group == "Assigment":
+                #if 
+                    
+                #elif
 
         # curr = df.loc[ row, "TICKER" ]
         # for i in range( len( mult_ticker_lst ) ):
@@ -97,10 +129,17 @@ def analyzeCsv( pPath, pTicker ):
         #         if NaN != str( df.loc[ row, "TOTAL COMMISION" ] ):
         #             mult_commission_count[ i ] = float( df.loc[ row, "TOTAL COMMISION" ] )
 
+    # Final formatting
+    total_pl *= 100
+
+    # Printing out values
     print( 'Stock:              ' + pTicker )
-    print( 'Total Commision:  $ ' + str( total_commission ) )
-    print( 'Option Commision: $ ' + str( opt_comission ) )
+    print( 'Total Commision:  $ ' + StrRound( total_commission ) ) 
+    print( 'Option Commision: $ ' + StrRound( opt_comission ) )
     print( 'Option Trades:      ' + str( opt_trades ) )
+    print( 'Total P/L:        $ ' + StrRound( total_pl ) )
+    print( 'Current Stock:      ' + str( total_stock ) )
+    print( '\n')
 
 
 def calc_total_commision( pDataFrame ):
@@ -133,7 +172,7 @@ def main():
     else:
         # TODO: This file name is the same as in convert_csv_td.py
         csv_input_name = 'testing.csv'
-        csv_input_path = '../io/output/' + csv_input_name
+        csv_input_path = '../../io/output/' + csv_input_name
     
     if( False == doesFileExist( csv_input_path ) ):
         exit( 1 )
