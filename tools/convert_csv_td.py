@@ -33,7 +33,7 @@ NaN = "NaN"
 global_commission = 0.65
 
 # This needs to corrolate with 
-def makeRow( pExpDate=NaN, pType=NaN, pAction=NaN, pTicker=NaN, pStrike=NaN, pAmount=NaN, pPrice=NaN, pCommission=NaN ):
+def makeRow( pExpDate=NaN, pType=NaN, pAction=NaN, pTicker=NaN, pStrike=NaN, pAmount=NaN, pPrice=NaN, pCommission=NaN ): #, pDividend=NaN ):
     # Variables
     row = []
 
@@ -46,7 +46,8 @@ def makeRow( pExpDate=NaN, pType=NaN, pAction=NaN, pTicker=NaN, pStrike=NaN, pAm
     row.append( pAmount )
     row.append( pPrice )
     row.append( pCommission )
-    
+    # row.append( pDividend )
+
     return row
 
 # Converts 'MM DD YYYY' ( month day year ) to 'MM/DD/YYYY' 
@@ -111,6 +112,7 @@ def filterDescriptionColumn( pColLen, pCell, pRow ):
     f_balance = 'FREE BALANCE INTEREST ADJUSTMENT'
     f_funding = 'CLIENT REQUESTED ELECTRONIC FUNDING RECEIPT'
     f_margin = 'MARGIN INTEREST ADJUSTMENT'
+    f_div = 'QUALIFIED DIVIDEND'
     f_bought = 'Bought'
     f_sold = 'Sold'
     f_call = 'Call'
@@ -209,13 +211,17 @@ def filterDescriptionColumn( pColLen, pCell, pRow ):
         # row_str[3] = '@'
         price = row_str[ 4 ]
         
-        f_row = makeRow( NaN, "Stock", action, ticker, NaN, amount, price )
+        f_row = makeRow( NaN, "Stock", action, ticker, NaN, amount, price)
 
     # Filters out funding receipts 
     # TODO: Double check this works
     elif f_funding in pCell:
         f_row = makeRow( NaN, "Funding", NaN, NaN, NaN, NaN, pRow[ 7 ])
-        
+
+    # Filters out dividends
+    # elif f_div in pCell:
+    #     f_row = makeRow( NaN, "Dividend", NaN, NaN, NaN, NaN, NaN, NaN )
+
     # Error if anything else
     else:
         print( global_error + "Nothing found." + " " + pCell)
@@ -262,6 +268,7 @@ def main():
     col_qaun = 'QUANTITY'
     col_tick = 'SYMBOL'
     col_num = 'NUMBER'
+    col_div = 'DIVIDEND'
     col_id = 'TRANSACTION ID'
 
 
@@ -272,7 +279,7 @@ def main():
     # print( df.shape )
     # print( df.dtypes )
     
-    # TODO: NOTE, if this changes, makeRow needs to too 
+    # TODO: NOTE, if this changes, makeRow inside filterDescriptionColumn needs to too 
     header = [ 'DATE OF ACTION',
                'DATE OF EXPIRATION',
                'TYPE',
@@ -282,6 +289,7 @@ def main():
                'AMOUNT',
                'COST',
                'TOTAL COMMISION',
+            #    'DIVIDEND',
                'ORIGINAL ROW' ]
             #    TODO: Make a 'Assigment = true / false' column
     total_columns = len( header )
