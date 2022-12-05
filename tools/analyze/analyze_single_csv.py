@@ -60,15 +60,6 @@ def analyzeCsv( pPath, pTicker ):
     # If file exists, then figure out what it does
     df = pd.read_csv( pPath, sep=',' )
     len_row, len_col = df.shape
-        
-    # TODO: User can select total of everything, or total of single items
-    # Start of Logic:
-    #   ** Order of want **
-    #   - Break Even:
-    #       - Overall options
-    #   - total commission
-    #   - # of stock currently own
-    #   - how many options trades
 
     total_pl = 0            # profit / loss
     total_commission = 0
@@ -179,13 +170,31 @@ def main():
     if( False == doesFileExist( csv_input_path ) ):
         exit( 1 )
 
+    ticker_list = findUniqueTickers( csv_input_path )
+
+    print( '\n\n' )
+    print( 'To Test: ' )
+    print( '\tpython analyze_single_csv.py < all.txt' )
+    print( '\tpython analyze_single_csv.py < single.txt' )
+    print( '\n\n' )
+    print( ticker_list )
+    print( '\n' )
+
 
     user_input = input( 'Enter a Ticker for single, or <enter> for all...  ' )
+    
     if user_input == '':
-        ticker_list = findUniqueTickers( csv_input_path )
+        pass
+
+    elif user_input in ticker_list:
+        ticker_list = [ user_input ]
 
     else:
-        ticker_list = [ user_input ]
+        print( "Ticker isn't in the list above." )
+        exit( 1 )
+
+    print("list")
+    print(ticker_list)
 
     for ticker in ticker_list:
         # print( str( ticker ) )

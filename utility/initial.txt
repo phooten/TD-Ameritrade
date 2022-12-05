@@ -1,0 +1,12 @@
+INVESTMENT
+investment      50000
+
+STOCK
+PTON            100
+
+* NOTES:
+* Prior to these transactions, enter initial investment / details
+* This file will be used for additional information like what stocks
+* were transfered over before hand, what details need to be added
+* that TD doesn't know about. Essentially it will act as an additional
+* un-dated previous excel transactions csv. 

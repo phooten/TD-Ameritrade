@@ -146,28 +146,31 @@ def filterDescriptionColumn( pColLen, pCell, pRow ):
 
     # Filters out 'removal due to assignment'
     elif f_assignment in pCell:
-        # TODO: Special case, see line below
-        # 03/16/2022,41381062742,REMOVAL OF OPTION DUE TO ASSIGNMENT (RBLX Mar 18 2022 80.0 Put),1,RBLX Mar 18 2022 80.0 Put,,,0.00,,,,
+        pass
+        # IGNORING:
+        # This was taken place in a seperate option transaction:
+        # TODO:
+        #   Coordinate these cases with the stock buys / sells
+        # ----------------------------------------------------------------------
+        # # SPECIAL CASE:
+        # # 03/16/2022,41381062742,REMOVAL OF OPTION DUE TO ASSIGNMENT (RBLX Mar 18 2022 80.0 Put),1,RBLX Mar 18 2022 80.0 Put,,,0.00,,,,
 
-        description = pCell.split()
-        description = description[ 6 ]
+        # # NORMAL CASE:
+        # description = pCell.split()
+        # description = description[ 6 ]
 
-        # print( description )
-        start_text = "(0"
-        end_text = "."
-        start_loc = description.find( start_text ) + len( start_text )
-        end_loc = description.find( end_text )
-        substring = description[ start_loc:end_loc ]
-        # print( substring )
-        
-        # ticker = pRow[ 6 ]
-        ticker = "NOT DONE"
-        price = 0       # Assigned, so no need to track cost
-        commission = 0  # Assigned so has no cost, no comission
+        # start_text = "(0"
+        # end_text = "."
+        # start_loc = description.find( start_text ) + len( start_text )
+        # end_loc = description.find( end_text )
+        # substring = description[ start_loc:end_loc ]
 
-        f_row = makeRow( NaN, "Assignment", NaN, ticker, NaN, NaN, price, commission )
-        # f_row = makeRow()
-        
+        # ticker = "NOT DONE"
+        # price = 0       # Assigned, so no need to track cost
+        # commission = 0  # Assigned so has no cost, no comission
+
+        # f_row = makeRow( NaN, "Assignment", NaN, ticker, NaN, NaN, price, commission )
+        # ----------------------------------------------------------------------
 
     # Filters out 'balance adjustments'
     elif any( x in pCell for x in ( f_balance, f_margin ) ):
@@ -228,11 +231,19 @@ def main():
 
     # Variables: CSV files
     io_path = "../io/"
-    csv_input_name = 'transactions.csv'
-    csv_input_path = io_path + 'input/' + csv_input_name
+    # csv_input_name = 'transactions.csv'
+
+    # TODO: 2021 has alot of specifics in it
+    csv_input_name = 'transactions'
+    csv_year = 2022
+    csv_year_str = str( csv_year )
+    csv_extra = ".csv"
+    csv_input_name += "_" + csv_year_str + csv_extra
+    csv_input_path = io_path + 'input/' + csv_input_name # input/transactions_20xx.csv
+
+    csv_input_path = '../io/input/' + csv_input_name
     csv_output_name = 'output.csv'
     csv_output_path = io_path + 'output/' + csv_output_name
-    tmp_output_path = io_path + 'output/' + 'testing.csv'
 
 
     # Checking first argument of python script
@@ -262,7 +273,17 @@ def main():
     # print( df.dtypes )
     
     # TODO: NOTE, if this changes, makeRow needs to too 
-    header = [ 'DATE OF ACTION', 'DATE OF EXPIRATION', 'TYPE', 'ACTION', 'TICKER', 'STRIKE', 'AMOUNT', 'COST', 'TOTAL COMMISION','ORIGINAL ROW' ]
+    header = [ 'DATE OF ACTION',
+               'DATE OF EXPIRATION',
+               'TYPE',
+               'ACTION',
+               'TICKER',
+               'STRIKE',
+               'AMOUNT',
+               'COST',
+               'TOTAL COMMISION',
+               'ORIGINAL ROW' ]
+            #    TODO: Make a 'Assigment = true / false' column
     total_columns = len( header )
     base_coumns = 8
     extra_columns = len( header ) - base_coumns
@@ -297,10 +318,10 @@ def main():
     
     # new_csv.set_index( 'INDEX' )
     try:
-        os.remove( tmp_output_path )
+        os.remove( csv_output_path )
     except:
-        print( "No files in this path: ", tmp_output_path )
-    new_csv.to_csv( tmp_output_path, index=False )
+        print( "No files in this path: ", csv_output_path )
+    new_csv.to_csv( csv_output_path, index=False )
 
 
 if __name__ == "__main__":
