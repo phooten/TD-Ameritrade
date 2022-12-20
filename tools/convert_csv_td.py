@@ -205,6 +205,7 @@ def filterDescriptionColumn( pColLen, pCell, pRow ):
 
     # Filters out 'any stock buy/sell' 
     elif any( x in row_str[ 0 ] for x in f_list_stock ):
+        # TODO: New case for stocks bought not in groups of 100, i.e. BMBL from
         action = row_str[ 0 ]
         amount = row_str[ 1 ]  
         ticker = row_str[ 2 ]
